@@ -12,7 +12,22 @@ import plotly.express as px
 
 # Function to load the csv data to a dataframe
 def load_data(file):
-    return pd.read_csv(file)
+    name = file if isinstance(file, str) else getattr(file, 'name', '')
+    if name.endswith(('.xls', '.xlsx')):
+        return pd.read_excel(file)
+    for encoding in ['utf-8', 'latin-1', 'cp1252', 'utf-16']:
+        try:
+            if hasattr(file, 'seek'):
+                file.seek(0)
+            return pd.read_csv(file, encoding=encoding)
+        except UnicodeDecodeError:
+            continue
+    if hasattr(file, 'seek'):
+        file.seek(0)
+    try:
+        return pd.read_excel(file)
+    except Exception:
+        raise ValueError("Could not read the file. Supported formats: CSV, XLS, XLSX.")
 
 # Function to find categorical and numerical columns/variables in dataset
 def categorical_numerical(df):

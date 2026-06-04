@@ -8,6 +8,7 @@ import plotly.express as px
 from streamlit_option_menu import option_menu
 import data_analysis_functions as function
 import data_preprocessing_function as preprocessing_function
+import feature_stability_functions as stability_function
 import home_page
 import base64
 
@@ -122,7 +123,7 @@ else:
     
     if selected=='Data Exploration':
 
-        tab1, tab2 = st.tabs(['📊 Dataset Overview :clipboard', "🔎 Data Exploration and Visualization"])
+        tab1, tab2, tab3 = st.tabs(['📊 Dataset Overview :clipboard', "🔎 Data Exploration and Visualization", "🧪 Feature Stability"])
         num_columns, cat_columns = function.categorical_numerical(df)
         
         
@@ -170,10 +171,14 @@ else:
             st.subheader("Categorical and Numerical Variable Analysis")
             if len(num_columns)!=0 and len(cat_columns)!=0:
                 function.categorical_numerical_variable_analysis(df,cat_columns,num_columns)
-                
+
             else:
                 st.warning("The dataset does not have any numerical variables. Hence Cannot Perform Categorical and Numerical Variable Analysis")
-        
+
+        with tab3:
+            st.subheader("Feature Stability Report")
+            stability_function.display_stability_report(df, num_columns, cat_columns)
+
     # DATA PREPROCESSING  
     if selected=='Data Preprocessing':
         # st.header("🛠️ Data Preprocessing")

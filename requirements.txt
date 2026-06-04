@@ -8,3 +8,5 @@ seaborn
 plotly
 streamlit-option-menu
 streamlit_extras
+openpyxl
+xlrd

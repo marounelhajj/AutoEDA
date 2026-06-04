@@ -1,76 +1,122 @@
-# AutoEDA: Automated Exploratory Data Analysis
+# AutoEDA — Automated Exploratory Data Analysis
 
-<!-- ![AutoEDA Logo](insert your logo URL here) -->
+A web-based, no-code EDA and preprocessing platform built with Streamlit. Upload any CSV or Excel file and instantly explore, visualize, and preprocess your data.
 
-AutoEDA is an open-source Python application designed to streamline the process of Exploratory Data Analysis (EDA) for data scientists, analysts, and anyone working with data. EDA is a crucial step in understanding your dataset, finding patterns, and preparing data for further analysis. AutoEDA simplifies this process by providing an interactive web-based platform to explore, visualize, and preprocess your data effortlessly.
+![AutoEDA Home](images/image.png)
 
-**[Live Website Link](https://autoeda-ifj4.onrender.com/)**
+---
 
-## Preview
-![Alt text](images/image.png)
+## Features
 
-This is the home screen of the web application. From here, you can upload any dataset you want and perform Exploratory Data Analysis right through the web.
+### Data Exploration
+- **Dataset Overview** — row/column counts, duplicates, missing values, data types, and summary statistics
+- **Visualizations** — histograms, scatter plots, density plots, box plots, pie charts, correlation heatmaps, pair plots, and more
+- **Feature Stability Report** — per-feature stability scores (0–100) based on missing rate, coefficient of variation, skewness, kurtosis, and outlier rate; includes radar chart drill-down per feature
 
+### Data Preprocessing
+- Remove unwanted columns
+- Handle missing values — drop rows or fill with mean / median / mode
+- Encode categorical variables — One-Hot Encoding or Label Encoding
+- Scale numerical features — Standardization or Min-Max Scaling
+- Detect and handle outliers — remove or cap using IQR
+- Download the preprocessed dataset as CSV
 
+---
 
-## Key Features
+## Tech Stack
 
-- Dataset Overview: Quickly load and preview your dataset, understand its structure, and check for missing data.
+| Layer | Libraries |
+|---|---|
+| UI | Streamlit, streamlit-option-menu, streamlit-extras |
+| Data | Pandas, NumPy, SciPy, scikit-learn |
+| Visualization | Plotly, Matplotlib, Seaborn |
+| File support | openpyxl (xlsx), xlrd (xls) |
 
-- Data Exploration and Visualization: Explore individual features, visualize their distributions, and analyze relationships between variables. Create charts, scatter plots, and correlation heatmaps with ease.
+---
 
-- Automated Data Preprocessing: Upcoming feature! Automate data preprocessing steps, including handling missing data, encoding categorical variables, scaling, and more.
+## Getting Started
 
+### Option 1 — Docker (recommended)
 
-## Why AutoEDA?
+Requires [Docker Desktop](https://www.docker.com/products/docker-desktop).
 
-- Efficiency: AutoEDA automates routine EDA tasks, saving you time and effort.
+```bash
+git clone https://github.com/marounelhajj/AutoEDA.git
+cd AutoEDA
+docker compose up --build
+```
 
-- Interactivity: Visualize your data interactively to gain insights quickly.
+Open `http://localhost:8501` in your browser.
 
-- User-Friendly: No coding required. All tasks can be performed using the user-friendly web interface.
+### Option 2 — Local Python
 
-## Current Progress
+Requires Python 3.9+.
 
-**Dataset Overview:** Users can load and preview their datasets, access basic dataset statistics, and check for missing data.
-
-**Data Exploration and Visualization:** Users can explore numerical and categorical features, create histograms, scatter plots, and other visualizations.
-
-**Data Preprocessing**: Users can now perform data preprocessing tasks, including handling missing data, encoding categorical variables,feature scaling, identifying and handling outliers and more, directly from the web interface. This streamlines the data preparation process and saves time.
-## Roadmap
-
-I am actively working on enhancing and expanding the data preprocessing feature, as well as adding more features to the application. My goal is to continually improve the user experience and provide a comprehensive set of tools for data analysis and preprocessing. I'm dedicated to making the project even more powerful and user-friendly, so stay tuned for exciting updates and improvements! Your feedback and suggestions are highly appreciated as they help shape the future of this project.
-
-
-## Try AutoEDA
-
-I invite you to try AutoEDA for yourself. Upload your dataset, explore its features, and visualize the data. I appreciate your feedback and suggestions to make AutoEDA even better.
-
-- Make sure you have Python 3 installed.
-
-- Clone this repository to your local machine.
-
-- Open your command line or terminal.
-
-- Navigate to the project directory.
-
-- Run the following command to install the required Python libraries:
-
-```sh 
+```bash
+git clone https://github.com/marounelhajj/AutoEDA.git
+cd AutoEDA
 pip install -r requirements.txt
+python -m streamlit run main.py
 ```
 
-- To start the application, just run the following line in terminal
+Open `http://localhost:8501` in your browser.
 
-```sh
-streamlit run main.py
+---
+
+## Supported File Formats
+
+| Format | Extension |
+|---|---|
+| CSV | `.csv` |
+| Excel 97-2003 | `.xls` |
+| Excel 2007+ | `.xlsx` |
+
+Maximum upload size: **1 GB**
+
+---
+
+## Project Structure
+
+```
+AutoEDA/
+├── main.py                        # App entry point and page routing
+├── home_page.py                   # Home page UI and styling
+├── data_analysis_functions.py     # Exploration and visualization functions
+├── data_preprocessing_function.py # Preprocessing functions
+├── feature_stability_functions.py # Feature stability report
+├── requirements.txt               # Python dependencies
+├── Dockerfile                     # Docker image definition
+├── docker-compose.yml             # Docker Compose config
+├── .streamlit/
+│   └── config.toml                # Streamlit theme and server settings
+└── example_dataset/
+    └── titanic.csv                # Sample dataset for testing
 ```
 
-This will run the web application on your default web browser
+---
 
-## Contibutions
-AutoEDA is an open-source project, and I welcome contributions from the community. You can help by reporting issues, contributing code, or suggesting new features.
+## Feature Stability Report
 
+The stability report scores each feature from **0 to 100**:
 
+| Score | Label |
+|---|---|
+| 80 – 100 | Stable |
+| 60 – 79 | Moderate |
+| 40 – 59 | Unstable |
+| 0 – 39 | Highly Unstable |
 
+**Numerical features** are scored on:
+- Missing rate (up to −30 pts)
+- Coefficient of Variation — std/mean (up to −25 pts)
+- Skewness (up to −20 pts)
+- Excess Kurtosis (up to −15 pts)
+- Outlier Rate via IQR (up to −10 pts)
 
+**Categorical features** are scored on missing rate, cardinality, mode dominance, and entropy.
+
+---
+
+## License
+
+MIT
