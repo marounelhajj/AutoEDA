@@ -117,6 +117,3 @@ The stability report scores each feature from **0 to 100**:
 
 ---
 
-## License
-
-MIT
