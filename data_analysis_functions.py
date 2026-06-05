@@ -11,6 +11,7 @@ from collections import Counter
 import plotly.express as px
 
 # Function to load the csv data to a dataframe
+@st.cache_data
 def load_data(file):
     name = file if isinstance(file, str) else getattr(file, 'name', '')
     if name.endswith(('.xls', '.xlsx')):
@@ -30,16 +31,15 @@ def load_data(file):
         raise ValueError("Could not read the file. Supported formats: CSV, XLS, XLSX.")
 
 # Function to find categorical and numerical columns/variables in dataset
+@st.cache_data
 def categorical_numerical(df):
-    num_columns,cat_columns = [],[]
+    num_columns, cat_columns = [], []
     for col in df.columns:
-        if len(df[col].unique()) <= 30 or df[col].dtype== np.object_:
-            cat_columns.append(col.strip())
-
-        else:
+        if pd.api.types.is_numeric_dtype(df[col]) and df[col].nunique() > 30:
             num_columns.append(col.strip())
-
-    return num_columns,cat_columns
+        else:
+            cat_columns.append(col.strip())
+    return num_columns, cat_columns
 
 
 # Function to display dataset overview
@@ -188,30 +188,40 @@ def display_scatter_plot_of_two_numeric_features(df,num_columns):
 
 
 
-def categorical_variable_analysis(df,cat_columns):
+_MAX_CATEGORIES = 50  # cap bars/slices to keep charts fast
 
-    categorical_feature = st.selectbox(label="Select Categorical Feature",options=cat_columns)
-    categorical_plot_type = st.selectbox(label="Select Plot Type",options=["Bar Chart","Pie Chart","Stacked Bar Chart","Frequency Count"])
-    
-    if categorical_plot_type =="Bar Chart":
-        fig = px.bar(df,x=categorical_feature,title=f"Bar Chart of {categorical_feature}")
+def categorical_variable_analysis(df, cat_columns):
+    categorical_feature = st.selectbox(label="Select Categorical Feature", options=cat_columns)
+    categorical_plot_type = st.selectbox(label="Select Plot Type", options=["Bar Chart", "Pie Chart", "Stacked Bar Chart", "Frequency Count"])
+
+    # aggregate first — never pass raw df rows to the chart
+    counts = df[categorical_feature].value_counts().head(_MAX_CATEGORIES).reset_index()
+    counts.columns = [categorical_feature, "Count"]
+    n_unique = df[categorical_feature].nunique()
+    if n_unique > _MAX_CATEGORIES:
+        st.caption(f"Showing top {_MAX_CATEGORIES} of {n_unique} categories.")
+
+    fig = None
+    if categorical_plot_type == "Bar Chart":
+        fig = px.bar(counts, x=categorical_feature, y="Count", title=f"Bar Chart of {categorical_feature}")
 
     elif categorical_plot_type == "Pie Chart":
-        fig = px.pie(df,names=categorical_feature,title=f"Pie Chart of {categorical_feature}")
+        fig = px.pie(counts, names=categorical_feature, values="Count", title=f"Pie Chart of {categorical_feature}")
 
     elif categorical_plot_type == "Stacked Bar Chart":
         st.write("Select a second categorical feature for stacking")
-        second_categorical_feature = st.selectbox(label="Select Second Categorical Feature",options=cat_columns)
-
-        fig = px.bar(df,x=categorical_feature,color=second_categorical_feature,title=f"Stacked Bar Chart of {categorical_feature} by {second_categorical_feature}")
+        second_categorical_feature = st.selectbox(label="Select Second Categorical Feature", options=cat_columns)
+        top_cats = counts[categorical_feature].tolist()
+        filtered = df[df[categorical_feature].isin(top_cats)]
+        fig = px.bar(filtered, x=categorical_feature, color=second_categorical_feature,
+                     title=f"Stacked Bar Chart of {categorical_feature} by {second_categorical_feature}")
 
     elif categorical_plot_type == "Frequency Count":
-        cat_value_counts = df[categorical_feature].value_counts()
-        st.write(f"Frequency Count for {categorical_feature}: ")
-        st.write(cat_value_counts)
+        st.write(f"Frequency Count for {categorical_feature}")
+        st.write(counts)
 
-    if categorical_plot_type!= "Frequency Count" and fig is not None:
-        st.plotly_chart(fig,use_container_width=True) 
+    if categorical_plot_type != "Frequency Count" and fig is not None:
+        st.plotly_chart(fig, use_container_width=True)
 
 
 def feature_exploration_numerical_variables(df,num_columns):
@@ -229,28 +239,35 @@ def feature_exploration_numerical_variables(df,num_columns):
 
         # Pair Plot
         if st.button("Generate Pair Plot"):
-            pair_plot_fig = sns.pairplot(df[selected_features])
+            sample = df[selected_features].dropna().sample(min(500, len(df)), random_state=42)
+            pair_plot_fig = sns.pairplot(sample)
             st.pyplot(pair_plot_fig)
 
         # Correlation Heatmap
         if st.button("Generate Correlation Heatmap"):
-            correlation_matrix = df[selected_features].corr()
+            numeric_features = df[selected_features].select_dtypes(include='number').columns.tolist()
+            correlation_matrix = df[numeric_features].corr()
             plt.figure(figsize=(10, 6))
             sns.heatmap(correlation_matrix, annot=True, cmap="coolwarm", linewidths=0.5)
             plt.title("Correlation Heatmap")
             st.pyplot(plt)     
 
 
-def categorical_numerical_variable_analysis(df,cat_columns,num_columns):
-    categorical_feature_1 = st.selectbox(label="Categorical Feature", options=cat_columns)        
+def categorical_numerical_variable_analysis(df, cat_columns, num_columns):
+    categorical_feature_1 = st.selectbox(label="Categorical Feature", options=cat_columns)
     numerical_feature_1 = st.selectbox(label="Numerical Feature", options=num_columns)
 
-# Group by the selected categorical column and calculate the mean of the numerical column
-    group_data = df.groupby(categorical_feature_1)[numerical_feature_1].mean().reset_index()
+    group_data = (
+        df.groupby(categorical_feature_1)[numerical_feature_1]
+        .mean()
+        .reset_index()
+        .nlargest(_MAX_CATEGORIES, numerical_feature_1)
+    )
+    if df[categorical_feature_1].nunique() > _MAX_CATEGORIES:
+        st.caption(f"Showing top {_MAX_CATEGORIES} categories by mean {numerical_feature_1}.")
 
     st.subheader("Relationship between Categorical and Numerical Variables")
     st.write(f"Mean {numerical_feature_1} by {categorical_feature_1}")
-    
-    # Create a bar chart
-    fig = px.bar(group_data, x=categorical_feature_1, y=numerical_feature_1, title=f"{numerical_feature_1} by {categorical_feature_1}")
+    fig = px.bar(group_data, x=categorical_feature_1, y=numerical_feature_1,
+                 title=f"{numerical_feature_1} by {categorical_feature_1}")
     st.plotly_chart(fig, use_container_width=True)

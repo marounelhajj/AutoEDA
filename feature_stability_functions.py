@@ -50,6 +50,7 @@ def _stability_label(score):
         return "Highly Unstable"
 
 
+@st.cache_data
 def compute_numerical_stability(df, num_columns):
     rows = []
     for col in num_columns:
@@ -77,9 +78,10 @@ def compute_numerical_stability(df, num_columns):
     return pd.DataFrame(rows).sort_values("Stability Score", ascending=False).reset_index(drop=True)
 
 
+@st.cache_data
 def compute_categorical_stability(df, cat_columns):
     rows = []
-    obj_cols = [c for c in cat_columns if df[c].dtype == object]
+    obj_cols = [c for c in cat_columns if not pd.api.types.is_numeric_dtype(df[c])]
     for col in obj_cols:
         series = df[col].dropna()
         n_total = len(df[col])
@@ -202,7 +204,9 @@ def display_stability_report(df, num_columns, cat_columns):
     has_numerical = bool(num_columns) and any(
         pd.api.types.is_numeric_dtype(df[c]) for c in num_columns
     )
-    has_categorical = any(df[c].dtype == object for c in cat_columns)
+    has_categorical = bool(cat_columns) and any(
+        not pd.api.types.is_numeric_dtype(df[c]) for c in cat_columns
+    )
 
     if has_numerical:
         st.subheader("Numerical Features")

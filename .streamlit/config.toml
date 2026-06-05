@@ -3,4 +3,4 @@ base="light"
 primaryColor="#a070ec"
 
 [server]
-maxUploadSize = 1024
+maxUploadSize = 100
