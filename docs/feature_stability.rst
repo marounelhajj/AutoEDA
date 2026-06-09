@@ -119,6 +119,13 @@ AutoEDA categorizes features according to their stability score.
 | Unstable      | < 60        |
 +---------------+-------------+
 
+The following figure shows an example of how AutoEDA categorizes features according to their stability score.
+
+.. image:: photos/feature_stability.png
+   :width: 800px
+   :align: center
+   :alt: Feature Stability Score
+
 Interpreting Results
 --------------------
 
@@ -130,6 +137,13 @@ missing value treatment.
 
 Unstable features should be carefully reviewed and may require substantial preprocessing
 or removal from the dataset.
+
+The following figure shows an example of how AutoEDA shows the stability profile of every feature.
+
+.. image:: photos/stability_profile.png
+   :width: 800px
+   :align: center
+   :alt: Stability Profile
 
 Limitations
 -----------

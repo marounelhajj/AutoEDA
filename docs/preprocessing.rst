@@ -6,6 +6,13 @@ Overview
 
 The preprocessing module prepares raw datasets for analysis.
 
+The following figure shows an example of how AutoEDA shows the stability profile of every feature.
+
+.. image:: photos/density_plot.png
+   :width: 800px
+   :align: center
+   :alt: Data Visualization
+
 Missing Values
 --------------
 
@@ -37,3 +44,9 @@ AutoEDA provides:
 * Outlier detection using IQR
 * Outlier removal
 * Outlier transformation using median replacement
+The following figure shows an example of how AutoEDA shows the boxplot of a feature, and then deal with outliers either by removing outliers or transforming them by replacing their value with the mean of non-outlier values.
+
+.. image:: photos/handling_outliers.png
+   :width: 800px
+   :align: center
+   :alt: Box Plot
