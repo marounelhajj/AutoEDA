@@ -73,9 +73,58 @@ def detect_outliers_zscore(df, column_name):
 
 
 def remove_outliers(df, column_name, outliers):
-    return df[~df[column_name].isin(outliers)]
+    """
+    Remove rows containing outlier values from a specified column.
 
+    Parameters
+    ----------
+    df : pandas.DataFrame
+        Input dataframe.
+
+    column_name : str
+        Name of the column in which outliers were detected.
+
+    outliers : list
+        List of values identified as outliers.
+
+    Returns
+    -------
+    pandas.DataFrame
+        A dataframe with all rows containing outlier values removed.
+
+    Notes
+    -----
+    Rows are removed if their value in the specified column
+    appears in the provided outliers list.
+    """
+    return df[~df[column_name].isin(outliers)]
 def transform_outliers(df, column_name, outliers):
+    """
+    Replace outlier values with the median of non-outlier observations.
+
+    Parameters
+    ----------
+    df : pandas.DataFrame
+        Input dataframe.
+
+    column_name : str
+        Name of the column containing outliers.
+
+    outliers : list
+        List of values identified as outliers.
+
+    Returns
+    -------
+    pandas.DataFrame
+        Dataframe with outlier values replaced by the median
+        of the non-outlier values.
+
+    Notes
+    -----
+    The median is computed using only the values that are
+    not considered outliers. All detected outliers are then
+    replaced with this median value.
+    """
     non_outliers = df[~df[column_name].isin(outliers)]
     median_value = non_outliers[column_name].median()
     df.loc[df[column_name].isin(outliers), column_name] = median_value
