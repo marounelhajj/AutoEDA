@@ -20,14 +20,14 @@ Supported methods:
 Encoding
 --------
 
-* Label Encoding
-* One-Hot Encoding
+* Label Encoding: Converts categorical text or string values into numerical integer labels
+* One-Hot Encoding: Converts categorical data (such as text, labels, or words) into a numerical binary format
 
 Scaling
 -------
 
-* StandardScaler
-* MinMaxScaler
+* StandardScaler: Standardizes features by removing the mean and scaling the data to unit variance. It gives your data a mean of 0 and a standard deviation of 1.
+* MinMaxScaler:  Normalizes data by scaling features to a specific, bounded range—typically between 0 and 1.
 
 Outlier Treatment
 -----------------
