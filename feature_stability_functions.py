@@ -52,6 +52,36 @@ def _stability_label(score):
 
 @st.cache_data
 def compute_numerical_stability(df, num_columns):
+    """Compute stability metrics for all numerical columns.
+
+    For each column the following statistics are calculated: missing rate,
+    coefficient of variation, skewness, excess kurtosis, and IQR-based
+    outlier rate. These feed into a composite **Stability Score** (0–100)
+    and a categorical **Stability** label.
+
+    Scoring penalties (max deductions):
+
+    * Missing rate  → up to −30 pts
+    * Coeff. of variation → up to −25 pts
+    * Skewness → up to −20 pts
+    * Kurtosis → up to −15 pts
+    * Outlier rate → up to −10 pts
+
+    Parameters
+    ----------
+    df : pandas.DataFrame
+        The dataset to analyse.
+    num_columns : list of str
+        Numerical column names to include.
+
+    Returns
+    -------
+    pandas.DataFrame
+        One row per column with the columns: ``Feature``,
+        ``Missing Rate (%)``, ``Coeff. of Variation``, ``Skewness``,
+        ``Kurtosis (excess)``, ``Outlier Rate (%)``, ``Stability Score``,
+        ``Stability``. Sorted by ``Stability Score`` descending.
+    """
     rows = []
     for col in num_columns:
         series = df[col].dropna()
@@ -80,6 +110,35 @@ def compute_numerical_stability(df, num_columns):
 
 @st.cache_data
 def compute_categorical_stability(df, cat_columns):
+    """Compute stability metrics for all categorical (non-numeric) columns.
+
+    For each column the following statistics are calculated: missing rate,
+    cardinality, mode frequency, and normalised Shannon entropy. These feed
+    into a composite **Stability Score** (0–100) and a categorical
+    **Stability** label.
+
+    Scoring penalties (max deductions):
+
+    * Missing rate → up to −30 pts
+    * Cardinality  → up to −30 pts
+    * Mode dominance (> 80 %) → up to −20 pts
+    * Low entropy → up to −20 pts
+
+    Parameters
+    ----------
+    df : pandas.DataFrame
+        The dataset to analyse.
+    cat_columns : list of str
+        Column names to consider. Numeric columns in this list are skipped.
+
+    Returns
+    -------
+    pandas.DataFrame
+        One row per column with the columns: ``Feature``,
+        ``Missing Rate (%)``, ``Unique Values``, ``Cardinality (%)``,
+        ``Entropy (bits)``, ``Mode Frequency (%)``, ``Stability Score``,
+        ``Stability``. Sorted by ``Stability Score`` descending.
+    """
     rows = []
     obj_cols = [c for c in cat_columns if not pd.api.types.is_numeric_dtype(df[c])]
     for col in obj_cols:
@@ -195,6 +254,38 @@ def _radar_chart(df, feature, num_report):
 
 
 def display_stability_report(df, num_columns, cat_columns):
+    """Render the full Feature Stability Analysis section in the Streamlit app.
+
+    Displays:
+
+    * A colour-coded stability table for numerical features (via
+      :func:`compute_numerical_stability`).
+    * A bar chart of numerical stability scores.
+    * A radar chart and key metrics for a user-selected numerical feature.
+    * A colour-coded stability table for categorical features (via
+      :func:`compute_categorical_stability`).
+    * A bar chart of categorical stability scores.
+
+    Stability labels and their score thresholds:
+
+    ==================  =============
+    Label               Score range
+    ==================  =============
+    Stable              ≥ 80
+    Moderate            60 – 79
+    Unstable            40 – 59
+    Highly Unstable     < 40
+    ==================  =============
+
+    Parameters
+    ----------
+    df : pandas.DataFrame
+        The dataset to analyse.
+    num_columns : list of str
+        Numerical column names.
+    cat_columns : list of str
+        Categorical column names.
+    """
     st.markdown(
         "Each feature receives a **Stability Score (0–100)** based on missing data, "
         "variability, distribution shape, and outlier prevalence. "

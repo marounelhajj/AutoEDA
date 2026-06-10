@@ -51,9 +51,41 @@
 <li class="toctree-l1"><a class="reference internal" href="user_guide.html">User Guide</a></li>
 <li class="toctree-l1"><a class="reference internal" href="limitations.html">Limitations</a></li>
 <li class="toctree-l1 current"><a class="current reference internal" href="#">API Reference</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="#data-analysis-module">Data Analysis Module</a></li>
-<li class="toctree-l2"><a class="reference internal" href="#data-preprocessing-module">Data Preprocessing Module</a></li>
-<li class="toctree-l2"><a class="reference internal" href="#feature-stability-module">Feature Stability Module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#data-analysis-module">Data Analysis Module</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#load_data"><code class="docutils literal notranslate"><span class="pre">load_data()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#categorical_numerical"><code class="docutils literal notranslate"><span class="pre">categorical_numerical()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#display_dataset_overview"><code class="docutils literal notranslate"><span class="pre">display_dataset_overview()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#display_missing_values"><code class="docutils literal notranslate"><span class="pre">display_missing_values()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#display_statistics_visualization"><code class="docutils literal notranslate"><span class="pre">display_statistics_visualization()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#display_data_types"><code class="docutils literal notranslate"><span class="pre">display_data_types()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#search_column"><code class="docutils literal notranslate"><span class="pre">search_column()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#display_individual_feature_distribution"><code class="docutils literal notranslate"><span class="pre">display_individual_feature_distribution()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#display_scatter_plot_of_two_numeric_features"><code class="docutils literal notranslate"><span class="pre">display_scatter_plot_of_two_numeric_features()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#categorical_variable_analysis"><code class="docutils literal notranslate"><span class="pre">categorical_variable_analysis()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#feature_exploration_numerical_variables"><code class="docutils literal notranslate"><span class="pre">feature_exploration_numerical_variables()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#categorical_numerical_variable_analysis"><code class="docutils literal notranslate"><span class="pre">categorical_numerical_variable_analysis()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#data-preprocessing-module">Data Preprocessing Module</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#remove_selected_columns"><code class="docutils literal notranslate"><span class="pre">remove_selected_columns()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#remove_rows_with_missing_data"><code class="docutils literal notranslate"><span class="pre">remove_rows_with_missing_data()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#fill_missing_data"><code class="docutils literal notranslate"><span class="pre">fill_missing_data()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#one_hot_encode"><code class="docutils literal notranslate"><span class="pre">one_hot_encode()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#label_encode"><code class="docutils literal notranslate"><span class="pre">label_encode()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#standard_scale"><code class="docutils literal notranslate"><span class="pre">standard_scale()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#min_max_scale"><code class="docutils literal notranslate"><span class="pre">min_max_scale()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#detect_outliers_iqr"><code class="docutils literal notranslate"><span class="pre">detect_outliers_iqr()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#detect_outliers_zscore"><code class="docutils literal notranslate"><span class="pre">detect_outliers_zscore()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#remove_outliers"><code class="docutils literal notranslate"><span class="pre">remove_outliers()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#transform_outliers"><code class="docutils literal notranslate"><span class="pre">transform_outliers()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#feature-stability-module">Feature Stability Module</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#compute_numerical_stability"><code class="docutils literal notranslate"><span class="pre">compute_numerical_stability()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#compute_categorical_stability"><code class="docutils literal notranslate"><span class="pre">compute_categorical_stability()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#display_stability_report"><code class="docutils literal notranslate"><span class="pre">display_stability_report()</span></code></a></li>
+</ul>
+</li>
 </ul>
 </li>
 </ul>
@@ -86,12 +118,575 @@
 <h1>API Reference<a class="headerlink" href="#api-reference" title="Link to this heading"></a></h1>
 <section id="data-analysis-module">
 <h2>Data Analysis Module<a class="headerlink" href="#data-analysis-module" title="Link to this heading"></a></h2>
+<dl class="py function">
+<dt class="sig sig-object py" id="load_data">
+<span class="sig-name descname"><span class="pre">load_data</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">file</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#load_data" title="Link to this definition"></a></dt>
+<dd><p>Load a CSV or Excel file into a DataFrame.</p>
+<p>Supported formats: <code class="docutils literal notranslate"><span class="pre">.csv</span></code>, <code class="docutils literal notranslate"><span class="pre">.xls</span></code>, <code class="docutils literal notranslate"><span class="pre">.xlsx</span></code>. CSV files are tried
+with multiple encodings (utf-8, latin-1, cp1252, utf-16) before falling
+back to Excel parsing.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>file</strong> (<em>str</em><em> or </em><em>file-like</em>) – File path or Streamlit <code class="docutils literal notranslate"><span class="pre">UploadedFile</span></code> object.</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>The loaded dataset.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>pandas.DataFrame</p>
+</dd>
+<dt class="field-even">Raises<span class="colon">:</span></dt>
+<dd class="field-even"><p><strong>ValueError</strong> – If the file cannot be parsed as CSV or Excel.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="categorical_numerical">
+<span class="sig-name descname"><span class="pre">categorical_numerical</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">df</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#categorical_numerical" title="Link to this definition"></a></dt>
+<dd><p>Classify DataFrame columns into numerical and categorical lists.</p>
+<p>A column is treated as numerical when it has a numeric dtype <strong>and</strong> more
+than 30 distinct values; otherwise it is treated as categorical.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>df</strong> (<em>pandas.DataFrame</em>) – The input dataset.</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p><code class="docutils literal notranslate"><span class="pre">(num_columns,</span> <span class="pre">cat_columns)</span></code> — lists of numerical and categorical column names.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>tuple[list[str], list[str]]</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="display_dataset_overview">
+<span class="sig-name descname"><span class="pre">display_dataset_overview</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">df</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">cat_columns</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">num_columns</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#display_dataset_overview" title="Link to this definition"></a></dt>
+<dd><p>Render a dataset overview section in the Streamlit app.</p>
+<p>Displays a configurable row preview followed by a summary card showing
+row/column counts, duplicate count, and the lists of categorical and
+numerical columns.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>df</strong> (<em>pandas.DataFrame</em>) – The dataset to summarise.</p></li>
+<li><p><strong>cat_columns</strong> (<em>list</em><em>[</em><em>str</em><em>]</em>) – Categorical column names.</p></li>
+<li><p><strong>num_columns</strong> (<em>list</em><em>[</em><em>str</em><em>]</em>) – Numerical column names.</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="display_missing_values">
+<span class="sig-name descname"><span class="pre">display_missing_values</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">df</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#display_missing_values" title="Link to this definition"></a></dt>
+<dd><p>Render a missing-value summary table in the Streamlit app.</p>
+<p>Shows columns that contain at least one null value, sorted by missing
+count descending. Displays an info message when the dataset is complete.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>df</strong> (<em>pandas.DataFrame</em>) – The dataset to inspect.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="display_statistics_visualization">
+<span class="sig-name descname"><span class="pre">display_statistics_visualization</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">df</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">cat_columns</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">num_columns</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#display_statistics_visualization" title="Link to this definition"></a></dt>
+<dd><p>Render summary statistics and bar charts for all column types.</p>
+<p>For numerical columns, shows <code class="docutils literal notranslate"><span class="pre">df.describe()</span></code> output. For categorical
+columns, renders interactive bar charts and value-count tables for a
+user-selected subset of columns.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>df</strong> (<em>pandas.DataFrame</em>) – The dataset to visualise.</p></li>
+<li><p><strong>cat_columns</strong> (<em>list</em><em>[</em><em>str</em><em>]</em>) – Categorical column names.</p></li>
+<li><p><strong>num_columns</strong> (<em>list</em><em>[</em><em>str</em><em>]</em>) – Numerical column names.</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="display_data_types">
+<span class="sig-name descname"><span class="pre">display_data_types</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">df</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#display_data_types" title="Link to this definition"></a></dt>
+<dd><p>Render a data-type table for every column in the Streamlit app.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>df</strong> (<em>pandas.DataFrame</em>) – The dataset whose column dtypes should be displayed.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="search_column">
+<span class="sig-name descname"><span class="pre">search_column</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">df</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#search_column" title="Link to this definition"></a></dt>
+<dd><p>Render an interactive column search and dtype filter in the Streamlit app.</p>
+<p>Provides a text input to search column names by substring and a selectbox
+to filter by data type. The filtered DataFrame is displayed below the controls.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>df</strong> (<em>pandas.DataFrame</em>) – The dataset to search through.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="display_individual_feature_distribution">
+<span class="sig-name descname"><span class="pre">display_individual_feature_distribution</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">df</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">num_columns</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#display_individual_feature_distribution" title="Link to this definition"></a></dt>
+<dd><p>Render distribution plots for a single numerical feature.</p>
+<p>Lets the user pick a numerical column and a plot type (Histogram, Scatter
+Plot, Density Plot, or Box Plot) and displays the resulting Plotly chart
+along with descriptive statistics.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>df</strong> (<em>pandas.DataFrame</em>) – The dataset to visualise.</p></li>
+<li><p><strong>num_columns</strong> (<em>list</em><em>[</em><em>str</em><em>]</em>) – Numerical column names available for selection.</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="display_scatter_plot_of_two_numeric_features">
+<span class="sig-name descname"><span class="pre">display_scatter_plot_of_two_numeric_features</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">df</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">num_columns</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#display_scatter_plot_of_two_numeric_features" title="Link to this definition"></a></dt>
+<dd><p>Render an interactive scatter plot comparing two numerical features.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>df</strong> (<em>pandas.DataFrame</em>) – The dataset to visualise.</p></li>
+<li><p><strong>num_columns</strong> (<em>list</em><em>[</em><em>str</em><em>]</em>) – Numerical column names. At least two columns are required.</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="categorical_variable_analysis">
+<span class="sig-name descname"><span class="pre">categorical_variable_analysis</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">df</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">cat_columns</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#categorical_variable_analysis" title="Link to this definition"></a></dt>
+<dd><p>Render visualisations for a single categorical feature.</p>
+<p>Supports Bar Chart, Pie Chart, Stacked Bar Chart, and Frequency Count.
+Charts are capped at 50 categories to keep rendering fast.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>df</strong> (<em>pandas.DataFrame</em>) – The dataset to visualise.</p></li>
+<li><p><strong>cat_columns</strong> (<em>list</em><em>[</em><em>str</em><em>]</em>) – Categorical column names available for selection.</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="feature_exploration_numerical_variables">
+<span class="sig-name descname"><span class="pre">feature_exploration_numerical_variables</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">df</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">num_columns</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#feature_exploration_numerical_variables" title="Link to this definition"></a></dt>
+<dd><p>Render multi-feature exploration tools for numerical variables.</p>
+<p>Allows the user to select two or more numerical columns and generate a
+Scatter Plot Matrix, Pair Plot, or Correlation Heatmap on demand.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>df</strong> (<em>pandas.DataFrame</em>) – The dataset to visualise.</p></li>
+<li><p><strong>num_columns</strong> (<em>list</em><em>[</em><em>str</em><em>]</em>) – Numerical column names available for selection.</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="categorical_numerical_variable_analysis">
+<span class="sig-name descname"><span class="pre">categorical_numerical_variable_analysis</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">df</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">cat_columns</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">num_columns</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#categorical_numerical_variable_analysis" title="Link to this definition"></a></dt>
+<dd><p>Render a grouped bar chart of mean numerical value per category.</p>
+<p>Results are limited to the top 50 categories by mean value.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>df</strong> (<em>pandas.DataFrame</em>) – The dataset to visualise.</p></li>
+<li><p><strong>cat_columns</strong> (<em>list</em><em>[</em><em>str</em><em>]</em>) – Categorical column names available for selection.</p></li>
+<li><p><strong>num_columns</strong> (<em>list</em><em>[</em><em>str</em><em>]</em>) – Numerical column names available for selection.</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
 </section>
 <section id="data-preprocessing-module">
 <h2>Data Preprocessing Module<a class="headerlink" href="#data-preprocessing-module" title="Link to this heading"></a></h2>
+<dl class="py function">
+<dt class="sig sig-object py" id="remove_selected_columns">
+<span class="sig-name descname"><span class="pre">remove_selected_columns</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">df</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">columns_remove</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#remove_selected_columns" title="Link to this definition"></a></dt>
+<dd><p>Drop the specified columns from a DataFrame.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>df</strong> (<em>pandas.DataFrame</em>) – Input dataframe.</p></li>
+<li><p><strong>columns_remove</strong> (<em>list</em><em>[</em><em>str</em><em>]</em>) – Column names to drop.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>Dataframe with the specified columns removed.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>pandas.DataFrame</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="remove_rows_with_missing_data">
+<span class="sig-name descname"><span class="pre">remove_rows_with_missing_data</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">df</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">columns</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#remove_rows_with_missing_data" title="Link to this definition"></a></dt>
+<dd><p>Drop rows that contain missing values in the specified columns.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>df</strong> (<em>pandas.DataFrame</em>) – Input dataframe.</p></li>
+<li><p><strong>columns</strong> (<em>list</em><em>[</em><em>str</em><em>]</em>) – Column names to check for null values.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>Dataframe with the affected rows removed.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>pandas.DataFrame</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="fill_missing_data">
+<span class="sig-name descname"><span class="pre">fill_missing_data</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">df</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">columns</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">method</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#fill_missing_data" title="Link to this definition"></a></dt>
+<dd><p>Impute missing values in the specified columns.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>df</strong> (<em>pandas.DataFrame</em>) – Input dataframe (modified in-place).</p></li>
+<li><p><strong>columns</strong> (<em>list</em><em>[</em><em>str</em><em>]</em>) – Column names whose null values will be filled.</p></li>
+<li><p><strong>method</strong> (<em>str</em>) – Imputation strategy — <code class="docutils literal notranslate"><span class="pre">'mean'</span></code>, <code class="docutils literal notranslate"><span class="pre">'median'</span></code>, or <code class="docutils literal notranslate"><span class="pre">'mode'</span></code>.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>Dataframe with missing values filled.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>pandas.DataFrame</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="one_hot_encode">
+<span class="sig-name descname"><span class="pre">one_hot_encode</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">df</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">columns</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#one_hot_encode" title="Link to this definition"></a></dt>
+<dd><p>Apply one-hot encoding to the specified categorical columns.</p>
+<p>Each column is replaced by binary indicator columns prefixed with the
+original column name (<code class="docutils literal notranslate"><span class="pre">drop_first=False</span></code>).</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>df</strong> (<em>pandas.DataFrame</em>) – Input dataframe.</p></li>
+<li><p><strong>columns</strong> (<em>list</em><em>[</em><em>str</em><em>]</em>) – Categorical column names to encode.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>Dataframe with the original columns replaced by dummy variables.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>pandas.DataFrame</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="label_encode">
+<span class="sig-name descname"><span class="pre">label_encode</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">df</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">columns</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#label_encode" title="Link to this definition"></a></dt>
+<dd><p>Apply label encoding to the specified categorical columns.</p>
+<p>Each unique string value is mapped to an integer using
+<code class="docutils literal notranslate"><span class="pre">sklearn.preprocessing.LabelEncoder</span></code>, fit per column independently.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>df</strong> (<em>pandas.DataFrame</em>) – Input dataframe (modified in-place).</p></li>
+<li><p><strong>columns</strong> (<em>list</em><em>[</em><em>str</em><em>]</em>) – Categorical column names to encode.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>Dataframe with the specified columns replaced by integer labels.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>pandas.DataFrame</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="standard_scale">
+<span class="sig-name descname"><span class="pre">standard_scale</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">df</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">columns</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#standard_scale" title="Link to this definition"></a></dt>
+<dd><p>Standardise columns to zero mean and unit variance.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>df</strong> (<em>pandas.DataFrame</em>) – Input dataframe (modified in-place).</p></li>
+<li><p><strong>columns</strong> (<em>list</em><em>[</em><em>str</em><em>]</em>) – Numerical column names to scale.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>Dataframe with the specified columns standardised.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>pandas.DataFrame</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="min_max_scale">
+<span class="sig-name descname"><span class="pre">min_max_scale</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">df</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">columns</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">feature_range</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">(0,</span> <span class="pre">1)</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#min_max_scale" title="Link to this definition"></a></dt>
+<dd><p>Scale columns to a specified minimum–maximum range.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>df</strong> (<em>pandas.DataFrame</em>) – Input dataframe (modified in-place).</p></li>
+<li><p><strong>columns</strong> (<em>list</em><em>[</em><em>str</em><em>]</em>) – Numerical column names to scale.</p></li>
+<li><p><strong>feature_range</strong> (<em>tuple</em><em>[</em><em>float</em><em>, </em><em>float</em><em>]</em>) – Desired output range, default <code class="docutils literal notranslate"><span class="pre">(0,</span> <span class="pre">1)</span></code>.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>Dataframe with the specified columns scaled.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>pandas.DataFrame</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="detect_outliers_iqr">
+<span class="sig-name descname"><span class="pre">detect_outliers_iqr</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">df</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">column_name</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#detect_outliers_iqr" title="Link to this definition"></a></dt>
+<dd><p>Detect outliers using the IQR method.</p>
+<p>Values below <code class="docutils literal notranslate"><span class="pre">Q1</span> <span class="pre">-</span> <span class="pre">1.5</span> <span class="pre">×</span> <span class="pre">IQR</span></code> or above <code class="docutils literal notranslate"><span class="pre">Q3</span> <span class="pre">+</span> <span class="pre">1.5</span> <span class="pre">×</span> <span class="pre">IQR</span></code> are flagged.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>df</strong> (<em>pandas.DataFrame</em>) – Input dataframe.</p></li>
+<li><p><strong>column_name</strong> (<em>str</em>) – Name of the numerical column to inspect.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>Sorted list of outlier values.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>list</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="detect_outliers_zscore">
+<span class="sig-name descname"><span class="pre">detect_outliers_zscore</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">df</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">column_name</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#detect_outliers_zscore" title="Link to this definition"></a></dt>
+<dd><p>Detect outliers using the Z-score method.</p>
+<p>Values whose absolute Z-score exceeds 3 are flagged.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>df</strong> (<em>pandas.DataFrame</em>) – Input dataframe.</p></li>
+<li><p><strong>column_name</strong> (<em>str</em>) – Name of the numerical column to inspect.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>List of outlier values.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>list</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="remove_outliers">
+<span class="sig-name descname"><span class="pre">remove_outliers</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">df</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">column_name</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">outliers</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#remove_outliers" title="Link to this definition"></a></dt>
+<dd><p>Remove rows containing outlier values from a specified column.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>df</strong> (<em>pandas.DataFrame</em>) – Input dataframe.</p></li>
+<li><p><strong>column_name</strong> (<em>str</em>) – Name of the column in which outliers were detected.</p></li>
+<li><p><strong>outliers</strong> (<em>list</em>) – List of values identified as outliers.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>Dataframe with all rows containing outlier values removed.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>pandas.DataFrame</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="transform_outliers">
+<span class="sig-name descname"><span class="pre">transform_outliers</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">df</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">column_name</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">outliers</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#transform_outliers" title="Link to this definition"></a></dt>
+<dd><p>Replace outlier values with the median of non-outlier observations.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>df</strong> (<em>pandas.DataFrame</em>) – Input dataframe.</p></li>
+<li><p><strong>column_name</strong> (<em>str</em>) – Name of the column containing outliers.</p></li>
+<li><p><strong>outliers</strong> (<em>list</em>) – List of values identified as outliers.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>Dataframe with outlier values replaced by the non-outlier median.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>pandas.DataFrame</p>
+</dd>
+</dl>
+</dd></dl>
+
 </section>
 <section id="feature-stability-module">
 <h2>Feature Stability Module<a class="headerlink" href="#feature-stability-module" title="Link to this heading"></a></h2>
+<dl class="py function">
+<dt class="sig sig-object py" id="compute_numerical_stability">
+<span class="sig-name descname"><span class="pre">compute_numerical_stability</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">df</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">num_columns</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#compute_numerical_stability" title="Link to this definition"></a></dt>
+<dd><p>Compute stability metrics for all numerical columns.</p>
+<p>For each column the following statistics are calculated: missing rate,
+coefficient of variation, skewness, excess kurtosis, and IQR-based outlier
+rate. These feed into a composite <strong>Stability Score</strong> (0–100).</p>
+<p>Scoring penalties:</p>
+<table class="docutils align-default">
+<thead>
+<tr class="row-odd"><th class="head"><p>Factor</p></th>
+<th class="head"><p>Max deduction</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p>Missing rate</p></td>
+<td><p>−30 pts</p></td>
+</tr>
+<tr class="row-odd"><td><p>Coefficient of variation</p></td>
+<td><p>−25 pts</p></td>
+</tr>
+<tr class="row-even"><td><p>Skewness</p></td>
+<td><p>−20 pts</p></td>
+</tr>
+<tr class="row-odd"><td><p>Kurtosis</p></td>
+<td><p>−15 pts</p></td>
+</tr>
+<tr class="row-even"><td><p>Outlier rate</p></td>
+<td><p>−10 pts</p></td>
+</tr>
+</tbody>
+</table>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>df</strong> (<em>pandas.DataFrame</em>) – The dataset to analyse.</p></li>
+<li><p><strong>num_columns</strong> (<em>list</em><em>[</em><em>str</em><em>]</em>) – Numerical column names to include.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>One row per column with fields: <code class="docutils literal notranslate"><span class="pre">Feature</span></code>, <code class="docutils literal notranslate"><span class="pre">Missing</span> <span class="pre">Rate</span> <span class="pre">(%)</span></code>,
+<code class="docutils literal notranslate"><span class="pre">Coeff.</span> <span class="pre">of</span> <span class="pre">Variation</span></code>, <code class="docutils literal notranslate"><span class="pre">Skewness</span></code>, <code class="docutils literal notranslate"><span class="pre">Kurtosis</span> <span class="pre">(excess)</span></code>,
+<code class="docutils literal notranslate"><span class="pre">Outlier</span> <span class="pre">Rate</span> <span class="pre">(%)</span></code>, <code class="docutils literal notranslate"><span class="pre">Stability</span> <span class="pre">Score</span></code>, <code class="docutils literal notranslate"><span class="pre">Stability</span></code>.
+Sorted by <code class="docutils literal notranslate"><span class="pre">Stability</span> <span class="pre">Score</span></code> descending.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>pandas.DataFrame</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="compute_categorical_stability">
+<span class="sig-name descname"><span class="pre">compute_categorical_stability</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">df</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">cat_columns</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#compute_categorical_stability" title="Link to this definition"></a></dt>
+<dd><p>Compute stability metrics for all categorical (non-numeric) columns.</p>
+<p>For each column the following statistics are calculated: missing rate,
+cardinality, mode frequency, and normalised Shannon entropy. These feed
+into a composite <strong>Stability Score</strong> (0–100).</p>
+<p>Scoring penalties:</p>
+<table class="docutils align-default">
+<thead>
+<tr class="row-odd"><th class="head"><p>Factor</p></th>
+<th class="head"><p>Max deduction</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p>Missing rate</p></td>
+<td><p>−30 pts</p></td>
+</tr>
+<tr class="row-odd"><td><p>Cardinality</p></td>
+<td><p>−30 pts</p></td>
+</tr>
+<tr class="row-even"><td><p>Mode dominance (&gt; 80 %)</p></td>
+<td><p>−20 pts</p></td>
+</tr>
+<tr class="row-odd"><td><p>Low entropy</p></td>
+<td><p>−20 pts</p></td>
+</tr>
+</tbody>
+</table>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>df</strong> (<em>pandas.DataFrame</em>) – The dataset to analyse.</p></li>
+<li><p><strong>cat_columns</strong> (<em>list</em><em>[</em><em>str</em><em>]</em>) – Column names to consider. Numeric columns are skipped.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>One row per column with fields: <code class="docutils literal notranslate"><span class="pre">Feature</span></code>, <code class="docutils literal notranslate"><span class="pre">Missing</span> <span class="pre">Rate</span> <span class="pre">(%)</span></code>,
+<code class="docutils literal notranslate"><span class="pre">Unique</span> <span class="pre">Values</span></code>, <code class="docutils literal notranslate"><span class="pre">Cardinality</span> <span class="pre">(%)</span></code>, <code class="docutils literal notranslate"><span class="pre">Entropy</span> <span class="pre">(bits)</span></code>,
+<code class="docutils literal notranslate"><span class="pre">Mode</span> <span class="pre">Frequency</span> <span class="pre">(%)</span></code>, <code class="docutils literal notranslate"><span class="pre">Stability</span> <span class="pre">Score</span></code>, <code class="docutils literal notranslate"><span class="pre">Stability</span></code>.
+Sorted by <code class="docutils literal notranslate"><span class="pre">Stability</span> <span class="pre">Score</span></code> descending.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>pandas.DataFrame</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="display_stability_report">
+<span class="sig-name descname"><span class="pre">display_stability_report</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">df</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">num_columns</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">cat_columns</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#display_stability_report" title="Link to this definition"></a></dt>
+<dd><p>Render the full Feature Stability Analysis section in the Streamlit app.</p>
+<p>Displays a colour-coded stability table, bar chart, and radar chart for
+numerical features, and a colour-coded stability table and bar chart for
+categorical features.</p>
+<p>Stability label thresholds:</p>
+<table class="docutils align-default">
+<thead>
+<tr class="row-odd"><th class="head"><p>Label</p></th>
+<th class="head"><p>Score range</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p>Stable</p></td>
+<td><p>≥ 80</p></td>
+</tr>
+<tr class="row-odd"><td><p>Moderate</p></td>
+<td><p>60 – 79</p></td>
+</tr>
+<tr class="row-even"><td><p>Unstable</p></td>
+<td><p>40 – 59</p></td>
+</tr>
+<tr class="row-odd"><td><p>Highly Unstable</p></td>
+<td><p>&lt; 40</p></td>
+</tr>
+</tbody>
+</table>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>df</strong> (<em>pandas.DataFrame</em>) – The dataset to analyse.</p></li>
+<li><p><strong>num_columns</strong> (<em>list</em><em>[</em><em>str</em><em>]</em>) – Numerical column names.</p></li>
+<li><p><strong>cat_columns</strong> (<em>list</em><em>[</em><em>str</em><em>]</em>) – Categorical column names.</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
 </section>
 </section>
 

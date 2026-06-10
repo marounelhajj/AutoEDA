@@ -6,17 +6,61 @@ from sklearn.preprocessing import StandardScaler, MinMaxScaler
 from scipy import stats
 
 
-def remove_selected_columns(df,columns_remove):
+def remove_selected_columns(df, columns_remove):
+    """Drop the specified columns from a DataFrame.
+
+    Parameters
+    ----------
+    df : pandas.DataFrame
+        Input dataframe.
+    columns_remove : list of str
+        Column names to drop.
+
+    Returns
+    -------
+    pandas.DataFrame
+        Dataframe with the specified columns removed.
+    """
     return df.drop(columns=columns_remove)
 
-# Create a function to remove rows with missing values in specific columns
 def remove_rows_with_missing_data(df, columns):
+    """Drop rows that contain missing values in the specified columns.
+
+    Parameters
+    ----------
+    df : pandas.DataFrame
+        Input dataframe.
+    columns : list of str
+        Column names to check for null values. Only rows with nulls in
+        these columns are removed; other rows are preserved.
+
+    Returns
+    -------
+    pandas.DataFrame
+        Dataframe with the affected rows removed, or ``None`` if
+        ``columns`` is empty.
+    """
     if columns:
         df = df.dropna(subset=columns)
         return df
 
-# Create a function to fill missing data with mean, median, or mode (for numerical columns)
 def fill_missing_data(df, columns, method):
+    """Impute missing values in the specified columns.
+
+    Parameters
+    ----------
+    df : pandas.DataFrame
+        Input dataframe (modified in-place).
+    columns : list of str
+        Column names whose null values will be filled.
+    method : {'mean', 'median', 'mode'}
+        Imputation strategy to apply to each column.
+
+    Returns
+    -------
+    pandas.DataFrame
+        Dataframe with missing values filled according to ``method``.
+    """
     for column in columns:
         if method == 'mean':
             df[column].fillna(df[column].mean(), inplace=True)
@@ -29,11 +73,45 @@ def fill_missing_data(df, columns, method):
 
 
 def one_hot_encode(df, columns):
+    """Apply one-hot encoding to the specified categorical columns.
+
+    Parameters
+    ----------
+    df : pandas.DataFrame
+        Input dataframe.
+    columns : list of str
+        Categorical column names to encode. Each column is replaced by
+        binary indicator columns prefixed with the original column name.
+        The first dummy is kept (``drop_first=False``).
+
+    Returns
+    -------
+    pandas.DataFrame
+        Dataframe with the original columns replaced by dummy variables.
+    """
     df = pd.get_dummies(df, columns=columns, prefix=columns, drop_first=False)
     return df
 
 
 def label_encode(df, columns):
+    """Apply label encoding to the specified categorical columns.
+
+    Each unique string value is mapped to an integer using
+    ``sklearn.preprocessing.LabelEncoder``. The encoding is fit and
+    applied per column independently.
+
+    Parameters
+    ----------
+    df : pandas.DataFrame
+        Input dataframe (modified in-place).
+    columns : list of str
+        Categorical column names to encode.
+
+    Returns
+    -------
+    pandas.DataFrame
+        Dataframe with the specified columns replaced by integer labels.
+    """
     label_encoder = LabelEncoder()
     for col in columns:
         df[col] = label_encoder.fit_transform(df[col])
@@ -42,16 +120,65 @@ def label_encode(df, columns):
 
 
 def standard_scale(df, columns):
+    """Standardise columns to zero mean and unit variance.
+
+    Parameters
+    ----------
+    df : pandas.DataFrame
+        Input dataframe (modified in-place).
+    columns : list of str
+        Numerical column names to scale.
+
+    Returns
+    -------
+    pandas.DataFrame
+        Dataframe with the specified columns standardised using
+        ``sklearn.preprocessing.StandardScaler``.
+    """
     scaler = StandardScaler()
     df[columns] = scaler.fit_transform(df[columns])
     return df
 
 def min_max_scale(df, columns, feature_range=(0, 1)):
+    """Scale columns to a specified minimum–maximum range.
+
+    Parameters
+    ----------
+    df : pandas.DataFrame
+        Input dataframe (modified in-place).
+    columns : list of str
+        Numerical column names to scale.
+    feature_range : tuple of (float, float), optional
+        Desired output range, by default ``(0, 1)``.
+
+    Returns
+    -------
+    pandas.DataFrame
+        Dataframe with the specified columns scaled using
+        ``sklearn.preprocessing.MinMaxScaler``.
+    """
     scaler = MinMaxScaler(feature_range=feature_range)
     df[columns] = scaler.fit_transform(df[columns])
     return df
 
 def detect_outliers_iqr(df, column_name):
+    """Detect outliers in a column using the IQR method.
+
+    Values below ``Q1 - 1.5 * IQR`` or above ``Q3 + 1.5 * IQR`` are
+    considered outliers.
+
+    Parameters
+    ----------
+    df : pandas.DataFrame
+        Input dataframe.
+    column_name : str
+        Name of the numerical column to inspect.
+
+    Returns
+    -------
+    list
+        Sorted list of outlier values found in the column.
+    """
     data = df[column_name]
     q25, q50, q75 = np.percentile(data, [25, 50, 75])
     iqr = q75 - q25
@@ -63,8 +190,23 @@ def detect_outliers_iqr(df, column_name):
 
 
 
-# Function to detect outliers using z-score
 def detect_outliers_zscore(df, column_name):
+    """Detect outliers in a column using the Z-score method.
+
+    Values whose absolute Z-score exceeds 3 are considered outliers.
+
+    Parameters
+    ----------
+    df : pandas.DataFrame
+        Input dataframe.
+    column_name : str
+        Name of the numerical column to inspect.
+
+    Returns
+    -------
+    list
+        List of outlier values found in the column.
+    """
     data = df[column_name]
     z_scores = np.abs(stats.zscore(data))
     threshold = 3  

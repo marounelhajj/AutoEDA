@@ -13,6 +13,26 @@ import plotly.express as px
 # Function to load the csv data to a dataframe
 @st.cache_data
 def load_data(file):
+    """Load a CSV or Excel file into a DataFrame.
+
+    Parameters
+    ----------
+    file : str or file-like
+        File path or Streamlit ``UploadedFile`` object.
+        Supported formats: ``.csv``, ``.xls``, ``.xlsx``.
+        CSV files are tried with multiple encodings (utf-8, latin-1,
+        cp1252, utf-16) before falling back to Excel parsing.
+
+    Returns
+    -------
+    pandas.DataFrame
+        The loaded dataset.
+
+    Raises
+    ------
+    ValueError
+        If the file cannot be parsed as CSV or Excel.
+    """
     name = file if isinstance(file, str) else getattr(file, 'name', '')
     if name.endswith(('.xls', '.xlsx')):
         return pd.read_excel(file)
@@ -33,6 +53,23 @@ def load_data(file):
 # Function to find categorical and numerical columns/variables in dataset
 @st.cache_data
 def categorical_numerical(df):
+    """Classify DataFrame columns into numerical and categorical lists.
+
+    A column is treated as numerical when it has a numeric dtype **and**
+    more than 30 distinct values; otherwise it is treated as categorical.
+
+    Parameters
+    ----------
+    df : pandas.DataFrame
+        The input dataset.
+
+    Returns
+    -------
+    num_columns : list of str
+        Column names identified as numerical.
+    cat_columns : list of str
+        Column names identified as categorical.
+    """
     num_columns, cat_columns = [], []
     for col in df.columns:
         if pd.api.types.is_numeric_dtype(df[col]) and df[col].nunique() > 30:
@@ -42,8 +79,22 @@ def categorical_numerical(df):
     return num_columns, cat_columns
 
 
-# Function to display dataset overview
-def display_dataset_overview(df,cat_columns,num_columns):
+def display_dataset_overview(df, cat_columns, num_columns):
+    """Render a dataset overview section in the Streamlit app.
+
+    Displays a configurable row preview followed by a summary card showing
+    row/column counts, duplicate count, and the lists of categorical and
+    numerical columns.
+
+    Parameters
+    ----------
+    df : pandas.DataFrame
+        The dataset to summarise.
+    cat_columns : list of str
+        Categorical column names (from :func:`categorical_numerical`).
+    num_columns : list of str
+        Numerical column names (from :func:`categorical_numerical`).
+    """
     
     display_rows = st.slider("Display Rows", 1, len(df), len(df) if len(df) < 20 else 20)
 
@@ -59,8 +110,18 @@ def display_dataset_overview(df,cat_columns,num_columns):
     st.write(num_columns)
     
 
-# Function to find the missing values in the dataset
 def display_missing_values(df):
+    """Render a missing-value summary table in the Streamlit app.
+
+    Shows a table of columns that contain at least one null value, sorted by
+    missing count descending. Displays an info message when the dataset is
+    complete.
+
+    Parameters
+    ----------
+    df : pandas.DataFrame
+        The dataset to inspect.
+    """
     missing_count = df.isnull().sum()
     missing_percentage = (missing_count / len(df)) * 100
     missing_data = pd.DataFrame({'Missing Count': missing_count, 'Missing Percentage': missing_percentage})
@@ -72,8 +133,22 @@ def display_missing_values(df):
     else:
         st.info("No Missing Value present in the Dataset")
 
-# Function to display basic statistics and visualizations about the dataset
-def display_statistics_visualization(df,cat_columns,num_columns):
+def display_statistics_visualization(df, cat_columns, num_columns):
+    """Render summary statistics and bar charts for all column types.
+
+    For numerical columns, shows ``df.describe()`` output.  For categorical
+    columns, renders interactive bar charts and value-count tables for a
+    user-selected subset of columns.
+
+    Parameters
+    ----------
+    df : pandas.DataFrame
+        The dataset to visualise.
+    cat_columns : list of str
+        Categorical column names.
+    num_columns : list of str
+        Numerical column names.
+    """
     st.write("Summary Statistics for Numerical Columns")
 
     if len(num_columns)!=0:
@@ -103,14 +178,30 @@ def display_statistics_visualization(df,cat_columns,num_columns):
     else:
         st.info("The dataset does not have any categorical columns")
 
-# Funciton to display the datatypes
 def display_data_types(df):
+    """Render a data-type table for every column in the Streamlit app.
+
+    Parameters
+    ----------
+    df : pandas.DataFrame
+        The dataset whose column dtypes should be displayed.
+    """
 
     data_types_df = pd.DataFrame({'Data Type':df.dtypes})
     st.write(data_types_df)
 
-# Function to search for a particular column or particular datatype in the dataset
 def search_column(df):
+    """Render an interactive column search and dtype filter in the Streamlit app.
+
+    Provides a text input to search column names by substring and a selectbox
+    to filter by data type. The filtered DataFrame is displayed below the
+    controls.
+
+    Parameters
+    ----------
+    df : pandas.DataFrame
+        The dataset to search through.
+    """
     search_query = st.text_input("Search for a column:")
 
     selected_data_type = st.selectbox("Filter by Data Type:", ['All'] + df.dtypes.unique().tolist())
@@ -133,7 +224,20 @@ def search_column(df):
 
 ## FUNCTIONS FOR TAB2: Data Exploration and Visualization
 
-def display_individual_feature_distribution(df,num_columns):
+def display_individual_feature_distribution(df, num_columns):
+    """Render distribution plots for a single numerical feature.
+
+    Lets the user pick a numerical column and a plot type (Histogram,
+    Scatter Plot, Density Plot, or Box Plot) and displays the resulting
+    Plotly chart along with descriptive statistics.
+
+    Parameters
+    ----------
+    df : pandas.DataFrame
+        The dataset to visualise.
+    num_columns : list of str
+        Numerical column names available for selection.
+    """
     st.subheader("Analyze Individual Feature Distribution")
     st.markdown("Here, you can explore individual numerical features, visualize their distributions, and analyze relationships between features.")
 
@@ -173,7 +277,17 @@ def display_individual_feature_distribution(df,num_columns):
     st.plotly_chart(fig,use_container_width=True)
 
 
-def display_scatter_plot_of_two_numeric_features(df,num_columns):
+def display_scatter_plot_of_two_numeric_features(df, num_columns):
+    """Render an interactive scatter plot comparing two numerical features.
+
+    Parameters
+    ----------
+    df : pandas.DataFrame
+        The dataset to visualise.
+    num_columns : list of str
+        Numerical column names. At least two columns are required; an info
+        message is shown otherwise.
+    """
 
     if len(num_columns) == 0:
         st.info("The dataset does not have any numerical columns")
@@ -191,6 +305,19 @@ def display_scatter_plot_of_two_numeric_features(df,num_columns):
 _MAX_CATEGORIES = 50  # cap bars/slices to keep charts fast
 
 def categorical_variable_analysis(df, cat_columns):
+    """Render visualisations for a single categorical feature.
+
+    Supports Bar Chart, Pie Chart, Stacked Bar Chart, and Frequency Count.
+    Charts are capped at 50 categories to keep rendering fast; a caption is
+    shown when categories are truncated.
+
+    Parameters
+    ----------
+    df : pandas.DataFrame
+        The dataset to visualise.
+    cat_columns : list of str
+        Categorical column names available for selection.
+    """
     categorical_feature = st.selectbox(label="Select Categorical Feature", options=cat_columns)
     categorical_plot_type = st.selectbox(label="Select Plot Type", options=["Bar Chart", "Pie Chart", "Stacked Bar Chart", "Frequency Count"])
 
@@ -224,7 +351,19 @@ def categorical_variable_analysis(df, cat_columns):
         st.plotly_chart(fig, use_container_width=True)
 
 
-def feature_exploration_numerical_variables(df,num_columns):
+def feature_exploration_numerical_variables(df, num_columns):
+    """Render multi-feature exploration tools for numerical variables.
+
+    Allows the user to select two or more numerical columns and generate a
+    Scatter Plot Matrix, Pair Plot, or Correlation Heatmap on demand.
+
+    Parameters
+    ----------
+    df : pandas.DataFrame
+        The dataset to visualise.
+    num_columns : list of str
+        Numerical column names available for selection.
+    """
     selected_features = st.multiselect("Select Features for Exploration:", num_columns, default=num_columns[:2], key="feature_exploration")
 
     if len(selected_features) < 2:
@@ -254,6 +393,21 @@ def feature_exploration_numerical_variables(df,num_columns):
 
 
 def categorical_numerical_variable_analysis(df, cat_columns, num_columns):
+    """Render a grouped bar chart of mean numerical value per category.
+
+    Displays the mean of a selected numerical feature grouped by a selected
+    categorical feature. Results are limited to the top 50 categories by mean
+    value.
+
+    Parameters
+    ----------
+    df : pandas.DataFrame
+        The dataset to visualise.
+    cat_columns : list of str
+        Categorical column names available for selection.
+    num_columns : list of str
+        Numerical column names available for selection.
+    """
     categorical_feature_1 = st.selectbox(label="Categorical Feature", options=cat_columns)
     numerical_feature_1 = st.selectbox(label="Numerical Feature", options=num_columns)
 

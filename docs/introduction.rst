@@ -15,3 +15,8 @@ Main Features
 * Data Exploration & Visualization
 * Feature Stability Analysis
 * Data Preprocessing
+
+Github Repository
+-----------------
+
+https://github.com/marounelhajj/AutoEDA
