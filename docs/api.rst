@@ -215,7 +215,7 @@ Data Preprocessing Module
 
 .. py:function:: standard_scale(df, columns)
 
-   Standardise columns to zero mean and unit variance.
+   Standardize columns to zero mean and unit variance.
 
    :param df: Input dataframe (modified in-place).
    :type df: pandas.DataFrame
