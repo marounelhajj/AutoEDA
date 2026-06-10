@@ -37,7 +37,7 @@ User interface and navigation.
 data_analysis_functions.py
 ^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-Exploratory data analysis functions.
+Exploratory data analysis functions : Load data, Separate features into numerical and categorical, Display data overview, Display missing values, Display statistics visualization, Display data types, Search for specific column, Display individual feature distribution, Display scatter plot of two numeric features, Categorical variable analysis, Feature exploration of numerical variables and Categorical vs Numerical variable analysis.
 
 data_preprocessing_function.py
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
