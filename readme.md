@@ -71,7 +71,7 @@ Open `http://localhost:8501` in your browser.
 | Excel 97-2003 | `.xls` |
 | Excel 2007+ | `.xlsx` |
 
-Maximum upload size: **200 MB**
+Maximum upload size: **1 GB**
 
 ---
 

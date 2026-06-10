@@ -83,7 +83,7 @@ st.sidebar.title("AutoEDA")
 st.sidebar.markdown("---")
 uploaded_file = st.sidebar.file_uploader("📂 Upload your file", type=["csv", "xls", "xlsx"])
 st.sidebar.markdown(
-    '<p style="color:#a070ec; font-size:0.75rem; margin-top:-10px;">Max file size: 200 MB</p>',
+    '<p style="color:#a070ec; font-size:0.75rem; margin-top:-10px;">Max file size: 1 GB</p>',
     unsafe_allow_html=True
 )
 use_example_data = st.sidebar.checkbox("Use Example Titanic Dataset", value=False)
