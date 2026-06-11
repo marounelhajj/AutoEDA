@@ -187,7 +187,16 @@ else:
 
         with tab3:
             st.subheader("Feature Stability Report")
-            stability_function.display_stability_report(df, num_columns, cat_columns)
+            stability_mode = st.radio(
+                "Analysis mode:",
+                ["Tabular Stability", "Time-Series Stability"],
+                horizontal=True,
+                key="stability_mode",
+            )
+            if stability_mode == "Tabular Stability":
+                stability_function.display_stability_report(df, num_columns, cat_columns)
+            else:
+                stability_function.display_ts_stability_report(df, num_columns, cat_columns)
 
     # DATA PREPROCESSING  
     if selected=='Data Preprocessing':
