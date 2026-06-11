@@ -393,3 +393,123 @@ Feature Stability Module
    :type num_columns: list[str]
    :param cat_columns: Categorical column names.
    :type cat_columns: list[str]
+
+
+Time-Series Feature Stability Module
+-------------------------------------
+
+.. py:function:: compute_ts_numerical_stability(df, time_col, num_columns, window_size, step_size)
+
+   Compute per-window stability metrics for numerical columns over time.
+
+   Sorts the DataFrame by ``time_col`` (or uses row order when ``None``), then
+   slides a window of ``window_size`` rows forward by ``step_size`` rows at a
+   time. For each window the following statistics are recorded: mean, standard
+   deviation, skewness, excess kurtosis, missing rate, KS statistic versus the
+   previous window, and PSI versus the first (reference) window.
+
+   :param df: The dataset to analyse.
+   :type df: pandas.DataFrame
+   :param time_col: Column name used to sort the data before windowing, or
+                    ``None`` to use the existing row order.
+   :type time_col: str or None
+   :param num_columns: Numerical column names to include.
+   :type num_columns: list[str]
+   :param window_size: Number of rows per window.
+   :type window_size: int
+   :param step_size: Number of rows to advance between consecutive windows.
+                     Values smaller than ``window_size`` produce overlapping windows.
+   :type step_size: int
+   :returns: One row per (window, feature) pair with fields: ``window_id``,
+             ``window_start``, ``Feature``, ``Mean``, ``Std``, ``Skewness``,
+             ``Kurtosis``, ``Missing Rate (%)``, ``KS Stat (vs prev)``,
+             ``PSI (vs ref)``. Returns an empty DataFrame when fewer windows
+             than ``window_size`` rows exist.
+   :rtype: pandas.DataFrame
+
+.. py:function:: compute_ts_categorical_stability(df, time_col, cat_columns, window_size, step_size)
+
+   Compute per-window stability metrics for categorical columns over time.
+
+   Applies the same sliding-window scheme as
+   :func:`compute_ts_numerical_stability`. For each window the following
+   statistics are recorded: mode frequency, Shannon entropy, normalised
+   entropy, cardinality, missing rate, JS divergence versus the previous
+   window, and JS divergence versus the first (reference) window.
+
+   :param df: The dataset to analyse.
+   :type df: pandas.DataFrame
+   :param time_col: Column name used to sort the data before windowing, or
+                    ``None`` to use the existing row order.
+   :type time_col: str or None
+   :param cat_columns: Categorical column names to include. Numeric columns
+                       in this list are skipped.
+   :type cat_columns: list[str]
+   :param window_size: Number of rows per window.
+   :type window_size: int
+   :param step_size: Number of rows to advance between consecutive windows.
+   :type step_size: int
+   :returns: One row per (window, feature) pair with fields: ``window_id``,
+             ``window_start``, ``Feature``, ``Mode Frequency (%)``,
+             ``Entropy (bits)``, ``Norm. Entropy``, ``Cardinality (%)``,
+             ``Missing Rate (%)``, ``JS Div (vs prev)``, ``JS Div (vs ref)``.
+             Returns an empty DataFrame when fewer windows than ``window_size``
+             rows exist.
+   :rtype: pandas.DataFrame
+
+.. py:function:: display_ts_stability_report(df, num_columns, cat_columns)
+
+   Render the Time-Series Feature Stability section in the Streamlit app.
+
+   Exposes a window-configuration panel where the user selects a time column
+   (or row order), window size, and step size. Then displays:
+
+   * A colour-coded drift summary table for numerical features with average
+     KS statistic and maximum PSI across all windows.
+   * A bar chart of average KS statistics per numerical feature.
+   * Per-feature drill-down charts: mean ± std band, skewness/kurtosis over
+     time, KS/PSI drift metrics, and missing rate (numerical).
+   * A colour-coded drift summary table for categorical features with average
+     JS divergence and maximum JS divergence versus the reference window.
+   * A bar chart of average JS divergence per categorical feature.
+   * Per-feature drill-down charts: Shannon entropy, mode frequency, JS
+     divergence, and missing rate (categorical).
+
+   Drift label thresholds (numerical — KS statistic):
+
+   .. list-table::
+      :header-rows: 1
+
+      * - Label
+        - KS range
+      * - Stable
+        - < 0.05
+      * - Moderate
+        - 0.05 – 0.09
+      * - Drifting
+        - 0.10 – 0.19
+      * - High Drift
+        - ≥ 0.20
+
+   Drift label thresholds (categorical — JS divergence):
+
+   .. list-table::
+      :header-rows: 1
+
+      * - Label
+        - JS range
+      * - Stable
+        - < 0.05
+      * - Moderate
+        - 0.05 – 0.14
+      * - Drifting
+        - 0.15 – 0.29
+      * - High Drift
+        - ≥ 0.30
+
+   :param df: The dataset to analyse.
+   :type df: pandas.DataFrame
+   :param num_columns: Numerical column names.
+   :type num_columns: list[str]
+   :param cat_columns: Categorical column names.
+   :type cat_columns: list[str]

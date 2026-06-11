@@ -153,3 +153,106 @@ knowledge or expert judgment.
 
 Certain features may receive low stability scores while still being valuable for predictive
 modeling, depending on the application and business context.
+
+Time-Series Feature Stability
+------------------------------
+
+Overview
+^^^^^^^^
+
+In addition to the tabular stability analysis, AutoEDA provides a **Time-Series Stability**
+mode that measures how feature distributions shift across consecutive time windows.
+
+This mode is useful when the dataset has a temporal ordering — for example, rows collected
+day by day or batch by batch — and the goal is to detect **data drift** before deploying or
+retraining a model.
+
+How It Works
+^^^^^^^^^^^^
+
+The dataset is sorted by a user-selected time column (or processed in row order when no time
+column is available). A sliding window of configurable size is then applied:
+
+* **Window size** — the number of rows in each window.
+* **Step size** — the number of rows to advance between consecutive windows. A step size
+  smaller than the window size creates overlapping windows.
+
+For each window, per-feature statistics are computed and compared against the previous window
+and the first (reference) window.
+
+Numerical Drift Metrics
+^^^^^^^^^^^^^^^^^^^^^^^^
+
+KS Statistic
+   The two-sample Kolmogorov–Smirnov statistic measures the maximum distance between the
+   empirical cumulative distribution functions of the current window and the previous window.
+   A value close to zero indicates that the two windows come from the same distribution.
+
+PSI (Population Stability Index)
+   PSI compares the current window's distribution to the first (reference) window by binning
+   both distributions and summing the log-ratio of their proportions. Values above 0.25
+   typically signal a significant distribution shift.
+
+Categorical Drift Metrics
+^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+JS Divergence
+   Jensen–Shannon divergence is a symmetric measure of the difference between two
+   probability distributions. It ranges from 0 (identical distributions) to 1 (completely
+   disjoint distributions). It is computed both versus the previous window and versus the
+   reference window.
+
+Drift Classification
+^^^^^^^^^^^^^^^^^^^^^
+
+Numerical features are classified by their average KS statistic:
+
++------------+-------------+
+| Label      | KS range    |
++============+=============+
+| Stable     | < 0.05      |
++------------+-------------+
+| Moderate   | 0.05 – 0.09 |
++------------+-------------+
+| Drifting   | 0.10 – 0.19 |
++------------+-------------+
+| High Drift | ≥ 0.20      |
++------------+-------------+
+
+Categorical features are classified by their average JS divergence:
+
++------------+-------------+
+| Label      | JS range    |
++============+=============+
+| Stable     | < 0.05      |
++------------+-------------+
+| Moderate   | 0.05 – 0.14 |
++------------+-------------+
+| Drifting   | 0.15 – 0.29 |
++------------+-------------+
+| High Drift | ≥ 0.30      |
++------------+-------------+
+
+Interpreting Results
+^^^^^^^^^^^^^^^^^^^^^
+
+Features classified as **Stable** show consistent distributions across windows and are
+suitable for use without further monitoring.
+
+**Moderate** drift may warrant closer investigation, particularly for models sensitive to
+distributional assumptions.
+
+**Drifting** and **High Drift** features signal that the data-generating process may have
+changed. These features should be reviewed, and the model may require retraining or
+recalibration.
+
+Time-Series Limitations
+^^^^^^^^^^^^^^^^^^^^^^^^
+
+* At least two windows are required to compute drift metrics (KS, PSI, JS Divergence). With
+  only one window, summary statistics are displayed but drift columns will be empty.
+* The PSI binning uses 10 equal-width bins by default, which may not be optimal for all
+  distributions.
+* JS Divergence adds a small epsilon (1e-10) to empty categories to avoid undefined
+  logarithms; this may slightly underestimate divergence when many categories are absent
+  from one window.

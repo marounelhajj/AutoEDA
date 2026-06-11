@@ -91,7 +91,7 @@ feature_stability_functions.py
 Feature stability calculations:
 
 * Compute outlier rate using IQR method
-  
+
 * Compute stability score for numerical features
 
 * Compute stability score for categorical features
@@ -100,4 +100,10 @@ Feature stability calculations:
 
 * Build Radar Chart
 
-* Display Stability Report
+* Display Stability Report (tabular mode)
+
+* Compute per-window stability metrics for numerical features (time-series mode)
+
+* Compute per-window stability metrics for categorical features (time-series mode)
+
+* Display Time-Series Stability Report

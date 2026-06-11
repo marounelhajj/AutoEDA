@@ -1,38 +1,13 @@
-# AutoEDA — Automated Exploratory Data Analysis
+# AutoEDA
 
-A web-based, no-code EDA and preprocessing platform built with Streamlit. Upload any CSV or Excel file and instantly explore, visualize, and preprocess your data.
-
-![AutoEDA Home](images/image.png)
-
----
+A Streamlit-based platform for automated exploratory data analysis and data preprocessing.
 
 ## Features
 
-### Data Exploration
-- **Dataset Overview** — row/column counts, duplicates, missing values, data types, and summary statistics
-- **Visualizations** — histograms, scatter plots, density plots, box plots, pie charts, correlation heatmaps, pair plots, and more
-- **Feature Stability Report** — per-feature stability scores (0–100) based on missing rate, coefficient of variation, skewness, kurtosis, and outlier rate; includes radar chart drill-down per feature
-
-### Data Preprocessing
-- Remove unwanted columns
-- Handle missing values — drop rows or fill with mean / median / mode
-- Encode categorical variables — One-Hot Encoding or Label Encoding
-- Scale numerical features — Standardization or Min-Max Scaling
-- Detect and handle outliers — remove or cap using IQR
-- Download the preprocessed dataset as CSV
-
----
-
-## Tech Stack
-
-| Layer | Libraries |
-|---|---|
-| UI | Streamlit, streamlit-option-menu, streamlit-extras |
-| Data | Pandas, NumPy, SciPy, scikit-learn |
-| Visualization | Plotly, Matplotlib, Seaborn |
-| File support | openpyxl (xlsx), xlrd (xls) |
-
----
+- **Dataset Overview** — shape, data types, missing values, and descriptive statistics at a glance
+- **Data Exploration & Visualization** — distributions, scatter plots, categorical analysis, and correlation heatmaps
+- **Feature Stability Analysis** — stability scoring for tabular data plus time-series drift detection
+- **Data Preprocessing** — drop columns, handle missing values, encode categoricals, scale features, and manage outliers
 
 ## Getting Started
 
@@ -46,7 +21,7 @@ cd AutoEDA
 docker compose up --build
 ```
 
-Open `http://localhost:8501` in your browser.
+Then open [http://localhost:8501](http://localhost:8501) in your browser.
 
 ### Option 2 — Local Python
 
@@ -59,61 +34,75 @@ pip install -r requirements.txt
 python -m streamlit run main.py
 ```
 
-Open `http://localhost:8501` in your browser.
+Then open [http://localhost:8501](http://localhost:8501) in your browser.
 
----
+## Usage
 
-## Supported File Formats
+1. Upload a CSV or Excel file via the sidebar, or enable **Use Example Titanic Dataset**.
+2. Navigate between tabs using the top menu:
+   - **Home** — project overview and quick-start button
+   - **Data Exploration** — three sub-tabs: Dataset Overview, Exploration & Visualization, and Feature Stability
+   - **Data Preprocessing** — interactive cleaning and transformation pipeline with a downloadable result
 
-| Format | Extension |
-|---|---|
-| CSV | `.csv` |
-| Excel 97-2003 | `.xls` |
-| Excel 2007+ | `.xlsx` |
+## Feature Stability
 
-Maximum upload size: **1 GB**
+Each feature receives a stability score (0–100).
 
----
+### Tabular Stability
+
+| Label    | Score Range |
+|----------|-------------|
+| Stable   | > 80        |
+| Moderate | 60 – 80     |
+| Unstable | < 60        |
+
+Numerical features are scored using missing rate, coefficient of variation, skewness, kurtosis, and outlier rate. Categorical features are scored using missing rate, entropy, cardinality, and mode frequency.
+
+### Time-Series Stability
+
+Detects data drift across sliding windows of the dataset. A time column can be selected, or rows are processed in order.
+
+**Numerical drift** is measured with the KS statistic (vs. previous window) and PSI (vs. reference window):
+
+| Label      | KS Range    |
+|------------|-------------|
+| Stable     | < 0.05      |
+| Moderate   | 0.05 – 0.09 |
+| Drifting   | 0.10 – 0.19 |
+| High Drift | ≥ 0.20      |
+
+**Categorical drift** is measured with Jensen–Shannon divergence:
+
+| Label      | JS Range    |
+|------------|-------------|
+| Stable     | < 0.05      |
+| Moderate   | 0.05 – 0.14 |
+| Drifting   | 0.15 – 0.29 |
+| High Drift | ≥ 0.30      |
 
 ## Project Structure
 
 ```
-AutoEDA/
-├── main.py                        # App entry point and page routing
-├── home_page.py                   # Home page UI and styling
-├── data_analysis_functions.py     # Exploration and visualization functions
-├── data_preprocessing_function.py # Preprocessing functions
-├── feature_stability_functions.py # Feature stability report
-├── requirements.txt               # Python dependencies
-├── Dockerfile                     # Docker image definition
-├── docker-compose.yml             # Docker Compose config
-├── .streamlit/
-│   └── config.toml                # Streamlit theme and server settings
-└── example_dataset/
-    └── titanic.csv                # Sample dataset for testing
+main.py                        # Streamlit entry point
+home_page.py                   # Landing page content and CSS
+data_analysis_functions.py     # Exploration and visualization logic
+data_preprocessing_function.py # Preprocessing transformations
+feature_stability_functions.py # Stability scoring and drift metrics
+docs/                          # Sphinx documentation source
+example_dataset/               # Bundled Titanic dataset
 ```
 
----
+## Documentation
 
-## Feature Stability Report
+Full documentation is available in the `docs/` directory and can be built with Sphinx:
 
-The stability report scores each feature from **0 to 100**:
+```bash
+cd docs
+make html
+```
 
-| Score | Label |
-|---|---|
-| 80 – 100 | Stable |
-| 60 – 79 | Moderate |
-| 40 – 59 | Unstable |
-| 0 – 39 | Highly Unstable |
+The rendered HTML lives in `_build/html/index.html`.
 
-**Numerical features** are scored on:
-- Missing rate (up to −30 pts)
-- Coefficient of Variation — std/mean (up to −25 pts)
-- Skewness (up to −20 pts)
-- Excess Kurtosis (up to −15 pts)
-- Outlier Rate via IQR (up to −10 pts)
+## File Size Limit
 
-**Categorical features** are scored on missing rate, cardinality, mode dominance, and entropy.
-
----
-
+The uploader accepts files up to **1 GB**.
