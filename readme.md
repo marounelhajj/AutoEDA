@@ -94,14 +94,50 @@ example_dataset/               # Bundled Titanic dataset
 
 ## Documentation
 
-Full documentation is available in the `docs/` directory and can be built with Sphinx:
+The docs are written in reStructuredText and built with [Sphinx](https://www.sphinx-doc.org). Source files live in `docs/` and the rendered output goes to `_build/html/`.
+
+### Install documentation dependencies
+
+The Sphinx build requires packages that are not in `requirements.txt`. Install them separately:
+
+```bash
+pip install sphinx sphinx-rtd-theme
+```
+
+The three extensions used (`autodoc`, `napoleon`, `viewcode`) are bundled with Sphinx and need no separate install.
+
+### Build the HTML docs
 
 ```bash
 cd docs
-make html
+make html        # Linux / macOS
+.\make.bat html  # Windows
 ```
 
-The rendered HTML lives in `_build/html/index.html`.
+Open `_build/html/index.html` in your browser to view the result.
+
+### Docs structure
+
+| File | Content |
+|------|---------|
+| `docs/introduction.rst` | Project overview and goals |
+| `docs/architecture.rst` | Module architecture |
+| `docs/feature_stability.rst` | Stability scoring and drift metrics |
+| `docs/preprocessing.rst` | Preprocessing operations |
+| `docs/installation.rst` | Installation instructions |
+| `docs/user_guide.rst` | Step-by-step usage guide |
+| `docs/limitations.rst` | Known limitations |
+| `docs/api.rst` | Auto-generated API reference |
+| `docs/conf.py` | Sphinx configuration |
+
+### Sphinx configuration summary
+
+| Setting | Value |
+|---------|-------|
+| Theme | `sphinx_rtd_theme` |
+| Extensions | `autodoc`, `napoleon`, `viewcode` |
+| Author | Maroun El Hajj |
+| Project | Automated EDA |
 
 ## File Size Limit
 
