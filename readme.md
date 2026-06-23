@@ -108,13 +108,20 @@ The three extensions used (`autodoc`, `napoleon`, `viewcode`) are bundled with S
 
 ### Build the HTML docs
 
+Run from the **project root** (where `Makefile` and `make.bat` live):
+
 ```bash
-cd docs
 make html        # Linux / macOS
 .\make.bat html  # Windows
 ```
 
 Open `_build/html/index.html` in your browser to view the result.
+
+You can also call Sphinx directly:
+
+```bash
+sphinx-build -b html docs _build/html
+```
 
 ### Docs structure
 
